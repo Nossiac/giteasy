@@ -1,0 +1,21 @@
+{% if paginator and paginator.page_left < paginator.page_right %}
+	<div class="text-center">
+	<ul class="pagination">
+		<li><a href="{{paginator.url+'1'}}">&laquo;</a></li>
+		{% if paginator.page_now > 1 %}
+		<li><a href="{{paginator.url+str(paginator.page_now-1)}}">&#139;</a></li>
+		{% end %}
+		{% for i in range(paginator.page_left, paginator.page_right+1) %}
+			{% if i == paginator.page_now %}
+			<li class="active"><a>{{i}}</a></li>
+			{% else %}
+			<li><a href="{{paginator.url+str(i)}}">{{i}}</a></li>
+			{% end %}
+		{% end %}
+		{% if paginator.page_now < paginator.page_total %}
+		<li><a href="{{paginator.url+str(paginator.page_now+1)}}">&#155;</a></li>
+		{% end %}
+		<li><a href="{{paginator.url+str(paginator.page_total)}}">&raquo;</a></li>
+	</ul>
+	</div>
+{% end %}

@@ -1,0 +1,61 @@
+{% extends template.htm %}
+
+{% block title %}
+<h2 class="text-center">Create New Repository</h2>
+{% end %}
+
+{% block body %}
+<script type="text/javascript" src="{{static_url('jquery/jquery.validate.min.js')}}"></script>
+<div class="row">
+	<div>
+		<form class="form" id="form" role="form" method="post" autocomplete="off">
+			<div class="form-group col-md-12">
+				<label for="repo.reponame" class="control-label text-danger">Repository Name</label>
+				<input type="text" class="form-control" id="repo.reponame" name="repo.reponame" placeholder="Repository Name">
+			</div>
+			<div class="form-group col-md-12">
+				<label for="repo.intro" class="control-label text-muted">Description (Optional)</label>
+				<input type="text" class="form-control" id="repo.intro" name="repo.intro" placeholder="Description">
+			</div>
+			<div class="form-group col-md-12">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="repo.public" name="repo.private">Make Repo Private!
+					</label>
+				</div>
+			</div>
+			<div class="form-group col-md-12 text-center">
+				<button type="submit" class="btn btn-success">Create Repository</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+$("#form").validate({
+	rules: {
+		"repo.reponame": {
+			required: true,
+			maxlength: 32,
+			remote: {
+				url: "/!check/newrepo",
+				data: {
+					username: "{{logined.username}}",
+					reponame: function() {
+						return $("#repo\\.reponame").val();
+					}
+				}
+			}
+		}
+	},
+	messages: {
+		"repo.reponame": {
+			required: "Please enter the reponame",
+			maxlength: "Reponame should be less than 32",
+			remote: "Reponame is already taken",
+		},
+	}
+});
+</script>
+
+{% end %}

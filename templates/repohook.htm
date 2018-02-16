@@ -1,0 +1,77 @@
+{% extends template.htm %}
+
+{% block title %}
+<h2>
+	<a href="/{{repo.owner.username}}">{{repo.owner.username}}</a> /
+	<a href="/{{repo.owner.username}}/{{repo.reponame}}">{{repo.reponame}}</a>
+</h2>
+<p class="text-muted">{{repo.intro}}</p>
+<hr>
+{% end %}
+
+{% block body %}
+<div class="row">
+
+<div class="col-md-3">
+	<ul class="nav nav-tabs nav-stacked">
+	  <li><span class="gliphicon gliphicon-file"></span><a href="/{{logined.username}}/{{repo.reponame}}/edit/basic">Basic</a></li>
+	  <li><span class="gliphicon gliphicon-file"></span><a href="/{{logined.username}}/{{repo.reponame}}/edit/hooks" class="active">Webhooks</a></li>
+	</ul>
+</div>
+<div class="col-md-9">
+
+<table class="table">
+  <tr>
+	<th>URL</th>
+	<th>Status</th>
+	<th>Method</th>
+	<th>Credential</th>
+	<th>New Tag</th>
+	<th></th>
+  </tr>
+  {% for hook in repo.hooks %}
+  <tr>
+	<td><a href="/{{logined.username}}/{{repo.reponame}}/edit/hooks?hid={{hook.hid}}">{{hook.url}}</a></td>
+	<td>{{"Disabled" if hook.disabled else "Enabled"}}</td>
+	<td>{{hook.method}}</td>
+	<td>{{hook.credential}}</td>
+	<td>
+		{% if hook.disabled %}
+		<a href="/{{logined.username}}/{{repo.reponame}}/edit/hooks?hid={{hook.hid}}&action=enable">Enable</a>
+		{% else %}
+		<a href="/{{logined.username}}/{{repo.reponame}}/edit/hooks?hid={{hook.hid}}&action=disable">Disable</a>
+		{% end %}
+		 |
+		<a href="/{{logined.username}}/{{repo.reponame}}/edit/hooks?hid={{hook.hid}}&action=delete">Delete</a>
+	</td>
+  </tr>
+  {% end %}
+</table>
+  <hr>
+<div class="">
+<form class="form-horizontal" role="form" method="post">
+  <div class="form-group">
+	<label for="reponame" class="control-label">Webcurrents</label>
+	<input type="text" class="form-control" name="hook.url" value="{{current.url or ''}}" placeholder="URL to trigger">
+  </div>
+
+  <div class="form-group">
+	<select name="hook.method" class="form-control">
+	  <option value="GET" {% if current.method.upper() == 'GET' %}selected="selected"{% end %}>GET</option>
+	  <option value="POST" {% if current.method.upper() == 'GET' %}selected="selected"{% end %}>POST</option>
+	</select>
+  </div>
+
+  <div class="form-group" >
+	<label for="reponame" class="control-label text-muted">Credential (optional)</label>
+	<input type="text" class="form-control" name="hook.credential" value="{{current.credential}}" placeholder="Credential">
+  </div>
+
+  <div class="form-group text-center">
+	  <button type="submit" class="btn btn-success">Save & Apply</button>
+  </div>
+</form>
+</div>
+</div>
+</div>
+{% end %}

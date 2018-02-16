@@ -1,0 +1,14 @@
+{% extends template.htm %}
+
+{% block title %}
+	{% if logined and logined.uid == user.uid %}
+	<h2><a href="/{{user.username}}">{{user.nickname or user.username}}</a></h2>
+	{% else %}
+	<h2>{{user.nickname or user.username}}</h2>
+	{% end %}
+	<hr>
+{% end %}
+
+{% block body %}
+{% raw user.intro %}
+{% end %}

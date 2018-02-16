@@ -1,0 +1,43 @@
+{% extends template.htm %}
+
+
+{% block title %}
+{% module RepoMenu(repo, logined) %}
+{% end %}
+
+{% block body %}
+<div class="alert alert-warning">This is an empty repo. You can follow the instructions below to push your data into it.</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">Quick Guide</h3>
+	</div>
+	<div class="panel-body">
+
+
+<h3>1. Clone this repository</h3>
+<pre>
+git clone <a href="http://{{host}}/{{repo.owner.username}}/{{repo.reponame}}">http://{{host}}/{{repo.owner.username}}/{{repo.reponame}}</a>
+</pre>
+
+<h3>2. Creating a new repository on the command line</h3>
+
+<pre>
+touch README.md
+git init
+git add README.md
+git commit -m "first commit"
+</pre>
+
+<h3>3. Pushing an existing repository from the command line</h3>
+
+<pre>
+git remote add origin <a href="http://{{host}}/{{repo.owner.username}}/{{repo.reponame}}">http://{{host}}/{{repo.owner.username}}/{{repo.reponame}}</a>
+git push -u origin master
+</pre>
+	</div>
+</div>
+
+{% end %}
+
+

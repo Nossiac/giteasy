@@ -1,0 +1,30 @@
+{% extends template.htm %}
+
+{% block body %}
+<div class="row text-center wrapper" style="margin-top: 100px;">
+  <div class="col-md-8 col-md-offset-2">
+	  <h2>Login</h2>
+	  <hr>
+	  <form class="form" role="form" id="Login" action="/!login" method="post">
+		{% if errors %}
+		<div class="alert alert-danger alert-dismissable text-center">
+			<button type="button" class="close" data-dismiss="alert"
+					aria-hidden="true">
+				&times;
+			</button>
+			{% for error in errors %}
+			  {{error}}
+			{% end %}
+		</div>
+		{% end %}
+		<div class="form-group">
+		  <input type="text" class="form-control" name="username" placeholder="Username" required="required">
+		</div>
+		<div class="form-group">
+		  <input type="password" class="form-control" name="password" placeholder="Password" required="required">
+		</div>
+		<button type="submit" class="btn btn-success">Login</button>
+	  </form>
+  </div>
+</div>
+{% end %}

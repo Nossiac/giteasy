@@ -1,0 +1,53 @@
+{% extends template.htm %}
+{#
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{{static_url('diff2html/diff2html.min.css')}}">
+{% end %}
+#}
+
+{% block title %}
+	{% module RepoMenu(repo, logined) %}
+{% end %}
+
+{% block body %}
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div>
+					{% for i, line in enumerate(commit.message.split("\n")) %}
+						{% if i == 0 %}
+					<div><b>{{line}}</b></div>
+						{% else %}
+					<div>{{line}}</div>
+						{% end %}
+					{% end %}
+				</div>
+				<div>
+					<span class="glyphicon glyphicon-user"></span>
+					<a href="mailto:{{commit.author.email}}">{{commit.author.name}}</a>
+					commited on
+					{{datetime.datetime.utcfromtimestamp(commit.commit_time).strftime("%Y-%m-%d %H:%M:%S")}}
+				</div>
+			</div>
+			<div class="panel-body code">{% if commit.parents %}{{commit.tree.diff_to_tree(commit.parents[0].tree, swap=True).patch}}{% else %}{{commit.tree.diff_to_tree(swap=True).patch}}{% end %}</div>
+		</div>
+
+		<div id="destination-elem-id"></div>
+
+	</div>
+</div>
+{#
+<script type="text/javascript" src="{{static_url('diff2html/diff2html.min.js')}}"></script>
+<script type="text/javascript" src="{{static_url('diff2html/diff2html-ui.min.js')}}"></script>
+<script type="text/javascript">
+	var diffHtml = Diff2Html.getPrettyHtml(
+	  '{{commit.tree.diff_to_tree(swap=True).patch.replace("\'", "\'\'").replace("\n", "\\n")}}',
+	  {inputFormat: 'diff', showFiles: true, matching: 'lines', outputFormat: 'side-by-side'}
+	);
+	document.getElementById("destination-elem-id").innerHTML = diffHtml;
+
+</script>
+#}
+{% end %}

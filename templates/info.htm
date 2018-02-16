@@ -1,0 +1,17 @@
+{% extends template.htm %}
+
+
+{% block body %}
+<div class="container">
+	<!-- this is a info page -->
+	<div class="col-md-8 col-md-offset-2">
+		<div class="card card-login mx-auto mt-5">
+			<h2 class="text-center">{{title}}</h2>
+			<div class="well">{% raw info %}</div>
+			<div class="text-center">
+			<a class="btn btn-primary btn-block" href="{{link}}">OK</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% end %}

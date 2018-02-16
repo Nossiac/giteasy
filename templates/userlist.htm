@@ -1,0 +1,33 @@
+{% extends template.htm %}
+
+{% block title %}
+<h2 class="text-center">User List</h2>
+<hr>
+{% end %}
+
+{% block body %}
+<div class="row">
+	<table class="table">
+		<tr>
+			<th>User Name</th>
+			<th>Nickname</th>
+			<th>User ID</th>
+			<th>Email</th>
+			<th>Role</th>
+			<th>Repo Number</th>
+			<th>Management</th>
+		</tr>
+		{% for user in users %}
+		<tr>
+			<td><a href="/{{user.username}}">{{user.username}}</a></td>
+			<td>{{user.nickname}}</td>
+			<td>{{user.uid}}</td>
+			<td>{{user.email}}</td>
+			<td>{{user.role}}</td>
+			<td>{{len(user.repos)}}</td>
+			<td><a href="/{{user.username}}/!edit">Edit</a></td>
+		</tr>
+		{% end %}
+	</table>
+</div>
+{% end %}

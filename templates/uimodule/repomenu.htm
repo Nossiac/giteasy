@@ -1,0 +1,46 @@
+{% import os %}
+{% import re %}
+<h2>
+	{% if not repo.public %}
+	<span class="glyphicon glyphicon-lock text-muted" style="font-size: 0.75em;"></span>
+	{% end %}
+	<a href="/{{repo.owner.username}}">{{repo.owner.username}}</a> /
+	<a href="/{{repo.owner.username}}/{{repo.reponame}}">{{repo.reponame}}</a>
+	{% if logined and logined.uid == repo.owner.uid %}
+	<a class="btn btn-link" href="/{{repo.owner.username}}/{{repo.reponame}}/edit/basic"><span class="glyphicon glyphicon-cog"></span></a>
+	{% end %}
+</h2>
+<p class="text-muted">{{repo.intro}}</p>
+<hr>
+
+{% if not repo.git.is_empty %}
+<div class="form-inline">
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Branch: {{repo.git.head.shorthand}}
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			{% for branch in repo.git.branches.remote %}
+			<li><a href="/{{repo.owner.username}}/{{repo.reponame}}/tree/{{branch.split('/')[-1]}}"><span class="text-muted">Branch</span> : <b>{{branch.split('/')[-1]}}</b></a></li>
+			{% end %}
+		</ul>
+	</div>
+	{% set tags = filter(lambda r: re.match(r'^refs/tags/(.+)', r), repo.git.listall_references()) %}
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tag: {{repo.ref_short}}
+			<span class="caret"></span>
+		</button>
+		{% if tags %}
+		<ul class="dropdown-menu" role="menu">
+			{% for tag in tags %}
+			<li><a href="/{{repo.owner.username}}/{{repo.reponame}}/tree/{{tag.split('/')[-1]}}"><span class="text-muted">Tag</span> : <b>{{tag.split('/')[-1]}}</b></a></li>
+			{% end %}
+		</ul>
+		{% end %}
+	</div>
+	<input type="text" class="form-control" readonly="readonly" value="{{repo.url}}" style="width: 40em;">
+	<a class="btn btn-link" href="/{{repo.owner.username}}/{{repo.reponame}}/{{os.path.join('history', repo.ref_short, repo.path.lstrip('/'))}}"><span class="glyphicon glyphicon-time"></span></a>
+</div>
+
+<hr />
+{% end %}

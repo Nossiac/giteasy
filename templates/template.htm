@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta charset="utf-8">
+	<meta name="Viewport" content="width=device-width, initial-scale=1">
+	<meta name="Author" content="Hua Shao <nossiac@163.com>">
+	<meta name="Author" content="http://github.com/nossiac/giteasy">
+	<meta name="Keywords" contect="giteasy git server http backend">
+	<meta name="Description" content="An simple http service for git.">
+	<meta http-equiv="Pragma" contect="no-cache">
+	{% block refresh %}
+	{% end %}
+	<title>GitEasy</title>
+	<link rel="stylesheet" type="text/css" href="{{static_url('bootstrap-3.3.7/css/bootstrap.min.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{static_url('giteasy.css')}}">
+	{% block extra_css %}
+	{% end %}
+	<script src="{{static_url('jquery/jquery-3.3.1.min.js')}}"></script>
+	<script src="{{static_url('bootstrap-3.3.7/js/bootstrap.min.js')}}" type="text/javascript"></script>
+</head>
+<body>
+
+{% block nav %}
+ <nav class="navbar navbar-default">
+  <div class="container">
+	<div class="navbar-header">
+	  <a class="navbar-brand" href="/">Git Easy,
+	   a simple git web service.</a>
+	</div>
+	{% if logined %}
+	<ul class="nav navbar-nav navbar-right" id="account-info">
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+		<strong{% if logined.admin() %} class="text-danger"{% end %}> {{logined.nickname or logined.username}} </strong>
+		<span class="caret"></span></a>
+		<ul class="dropdown-menu">
+		<li><a href="/{{logined.username}}/!info">About Me</a></li>
+		<li><a href="/{{logined.username}}/!edit">Edit Profile</a></li>
+		<li><a href="/!welcome">About This Site</a></li>
+		<li role="separator" class="divider"></li>
+		<li><a href="/{{logined.username}}">My repositories</a></li>
+		<li><a href="/!repoadd">Create Repo</a></li>
+		<li><a href="/!repoimport">Import Repo</a></li>
+		{% if logined.admin() %}
+		<li role="separator" class="divider"></li>
+		<li><a href="/!useradd"><span class="text-danger">Add New User</span></a></li>
+		<li><a href="/!users"><span class="text-danger">User List</span></a></li>
+		{% end %}
+		<li role="separator" class="divider"></li>
+		<li><a href="/!logout">Logout</a></li>
+		</ul>
+	</li>
+	</ul>
+	{% else %}
+	<ul class="nav navbar-nav navbar-right">
+	  <li><a href="/!login"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+	</ul>
+	{% end %}
+  </div>
+</nav>
+
+{% end %}
+
+<div class="container wrapper">
+	{% block title %}
+	{% end %}
+	{% block body %}
+	{% end %}
+</div>
+{% block footer %}
+<div class="text-center footer">
+	<hr>
+	<div class="text-center">
+		Powered by <a href="https://github.com/nossiac/giteasy">Giteasy</a> |
+		&copy; <a href="http://nossiac.com">nossiac.com</a>
+	</div>
+</div>
+{% end %}
+</body>
+</html>

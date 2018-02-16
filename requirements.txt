@@ -1,0 +1,9 @@
+bleach==3.1.0
+Faker==1.0.4
+Flask==1.0.2
+Markdown==3.0.1
+requests==2.21.0
+tornado==6.0
+bleach_whitelist==0.0.9
+pygit2==0.26.4
+peewee==3.9.3

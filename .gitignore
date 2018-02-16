@@ -1,0 +1,8 @@
+repo/
+*.log
+*.tmp
+*.pyc
+*.json
+*.db
+*.db-*
+.DS_Store

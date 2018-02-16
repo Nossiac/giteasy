@@ -1,0 +1,78 @@
+{% extends template.htm %}
+
+{% block title %}
+{% module RepoMenu(repo, logined) %}
+{% end %}
+
+{% block body %}
+<div class="row">
+	<div class="col-md-12">
+		<nav aria-label="breadcrumb">
+		  <ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="/{{repo.owner.username}}/{{repo.reponame}}/tree/{{repo.ref_short}}">{{repo.reponame}}</a></li>
+		{% set pathes = repo.path.strip("/").split("/") %}
+		{% if len(repo.path) > 0 %}
+			{% for i, path in enumerate(pathes[:-1]) %}
+			<li class="breadcrumb-item"><a href="/{{repo.owner.username}}/{{repo.reponame}}/tree/{{repo.ref_short}}/{{'/'.join(pathes[:i+1])}}">{{path}}</a></li>
+			{% end %}
+			<li class="breadcrumb-item">{{pathes[-1]}}</li>
+		{% end %}
+		  </ol>
+		</nav>
+
+		{% if repo.items %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{% if lastcommit %}
+				Last commit
+				<a href="/{{repo.owner.username}}/{{repo.reponame}}/commit/{{lastcommit.hex}}">{{lastcommit.message.split("\n")[0]}}</a>
+				by <a href="mailto:{{lastcommit.author.email}}">{{lastcommit.author.name}}</a>
+				{{datetime.datetime.fromtimestamp(lastcommit.commit_time).strftime("%Y-%m-%d %H:%M:%S")}}
+				{% end %}
+			</div>
+			<table class="table">
+				{% for item in sorted(repo.items, key=lambda x: ("a" if x["type"] == "tree" else "b")+x["name"].lower()) %}
+				<tr>
+					<td>
+						{% if item["type"] == "blob" %}
+						<span class="glyphicon glyphicon-file" aria-hidden="true" style="color: gray;"> </span>
+						{% else %}
+						<span class="glyphicon glyphicon-folder-close" aria-hidden="true" style="color: orange;"> </span>
+						{% end %}
+					</td>
+					<td style="width: 80%;">
+						{% if item["type"] == "blob" %}
+						<a href="/{{repo.owner.username}}/{{repo.reponame}}/blob/{{repo.ref_short}}{{repo.path}}/{{item['name']}}">{{item["name"]}}</a>
+						{% else %}
+						<a href="/{{repo.owner.username}}/{{repo.reponame}}/tree/{{repo.ref_short}}{{repo.path}}/{{item['name']}}">{{item["name"]}}</a>
+						{% end %}
+					</td>
+					<!-- <td style="width: 20%;"></td> -->
+					<td style="width: 20%;">
+						{% if item["lastcommit"] %}
+						<a href="/{{repo.owner.username}}/{{repo.reponame}}/commit/{{item['lastcommit'].hex}}">{{datetime.datetime.fromtimestamp(item["lastcommit"].commit_time).strftime("%Y-%m-%d %H:%M:%S")}}</a>
+						{% end %}
+					</td>
+					<td><a href="/{{repo.owner.username}}/{{repo.reponame}}/history/{{repo.ref_short}}{{repo.path}}/{{item['name']}}" title="History"><span class="glyphicon glyphicon-time"></span></a></td>
+				</tr>
+				{% end %}
+			</table>
+		</div>
+		{% end %}
+	</div>
+	{% if repo.filename %}
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">{%raw repo.filename %}</h3>
+			</div>
+			{% if repo.filename.endswith(".md") %}
+			<div class="panel-body">{%raw repo.filedata %}</div>
+			{% else %}
+			<div class="panel-body code">{%raw repo.filedata %}</div>
+			{% end %}
+		</div>
+	</div>
+	{% end %}
+</div>
+{% end %}

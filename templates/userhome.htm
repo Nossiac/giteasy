@@ -1,0 +1,68 @@
+{% extends template.htm %}
+
+
+{% block title %}
+<h2><a href="/{{user.username}}/!info">{{user.nickname or user.username}}</a></h2>
+<hr>
+{% end %}
+{% block body %}
+<div class="row">
+	{% for repo in repos %}
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="panel-title" style="overflow-x: hidden;">
+					{% if not repo.public %}
+					<span class="glyphicon glyphicon-lock text-muted" style="font-size: 0.8em;"></span>
+					{% end %}
+					<a href="/{{user.username}}/{{repo.reponame}}" style="color: blue; font-size: 1.25em; margin-right: 1em;">{{repo.reponame}}</a>
+				</div>
+			</div>
+			<div class="panel-body">
+				{% if not repo.git %}
+					<span class="text-danger">Repo broken.</span>
+					{% if logined and logined.uid == repo.owner.uid %}
+					<a href="/{{user.username}}/{{repo.reponame}}/delete" onclick="return confirm('Are you sure to delete this repo: {{repo.reponame}}?\n It cannot be recovered.')">delete it</a>
+					{% end %}
+				{% elif repo.git.is_empty %}
+					<span class="text-warning">This is an empty repo.</span>
+				{% else %}
+				{% set last = repo.git.get(repo.git.head.target) %}
+
+				{{len(list(repo.git.branches.remote))}} branches
+
+				<div class="pull-right">
+				Last commit: <a href="/{{user.username}}/{{repo.reponame}}/commit/{{str(repo.git.head.target)}}">{{str(repo.git.head.target)[:8]}}</a>
+				by <a href="mailto:{{last.author.email}}">{{last.author.name}}</a>
+				on {{datetime.datetime.utcfromtimestamp(last.commit_time).strftime("%Y-%m-%d %H:%M:%S")}}
+				</div>
+				{% end %}
+			</div>
+		</div>
+	</div>
+	{% end %}
+	{% if not repos %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Nothing here
+				</h3>
+			</div>
+			<div class="panel-body">
+				{% if logined and logined.uid == user.uid %}
+				<p>You don't have any git repos.</p>
+				<p>You can <a href="/!repoadd">create </a> or <a href="/!repoimport">import</a> your git repository。</p>
+				{% else %}
+				<p>No public repo avaialble.</p>
+				{% end %}
+			</div>
+		</div>
+	{% end %}
+
+	{% module Paginator(paginator) %}
+
+</div>
+
+{% end %}
+
+

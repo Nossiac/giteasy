@@ -1,0 +1,27 @@
+{% extends template.htm %}
+{% block title %}
+	{% module RepoMenu(repo, logined) %}
+{% end %}
+
+{% block body %}
+<ul class="list-group">
+{% for commit in history %}
+	<li class="list-group-item">
+	  <div><a href="/{{repo.owner.username}}/{{repo.reponame}}/commit/{{commit.hex}}">{{commit.hex}}</a></div>
+	  <div>{{commit.message.split("\n")[0]}}</div>
+	  <div>
+		<span class="glyphicon glyphicon-user"></span> {{commit.author.name}}
+		<span>{{datetime.datetime.utcfromtimestamp(commit.commit_time).strftime("%Y-%m-%d %H:%M:%S")}}</span>
+	  </div>
+	</li>
+{% end %}
+</ul>
+
+
+{% if history %}
+<ul class="pager">
+	{#<li><a href="/{{repo.owner.username}}/{{repo.reponame}}/history/{{newer}}">&larr; Newer</a></li>#}
+	<li><a href="/{{repo.owner.username}}/{{repo.reponame}}/history/{{history[-1].hex}}">Older &rarr;</a></li>
+</ul>
+{% end%}
+{% end %}

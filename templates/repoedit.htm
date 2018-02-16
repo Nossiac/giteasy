@@ -1,0 +1,81 @@
+{% extends template.htm %}
+
+{% block title %}
+<h2>
+	<a href="/{{repo.owner.username}}">{{repo.owner.username}}</a> /
+	<a href="/{{repo.owner.username}}/{{repo.reponame}}">{{repo.reponame}}</a>
+</h2>
+<p class="text-muted">{{repo.intro}}</p>
+<hr>
+{% end %}
+
+{% block body %}
+<script type="text/javascript" src="{{static_url('jquery/jquery.validate.min.js')}}"></script>
+<div class="row">
+	<div class="col-md-3">
+		<div class="span8">
+			<ul class="nav nav-tabs nav-stacked">
+				<li><span class="gliphicon gliphicon-file"></span><a href="/{{repo.owner.username}}/{{repo.reponame}}/edit/basic" class="active">Basic</a></li>
+				<li><span class="gliphicon gliphicon-file"></span><a href="/{{repo.owner.username}}/{{repo.reponame}}/edit/hooks">Webhooks</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<form class="form-horizontal" role="form" id="form" method="post" autocomplete="off">
+			<div class="form-group">
+				<label for="reponame" class="control-label">Repository Name</label>
+				<input type="text" class="form-control" id="repo.reponame" name="repo.reponame" value="{{repo.reponame}}" placeholder="Repository Name">
+				<input type="hidden" name="repo.rid" value="{{repo.rid}}">
+			</div>
+			<div class="form-group">
+				<label for="description" class="control-label">Description</label>
+				<input type="text" class="form-control" name="repo.intro" value="{{repo.intro}}" placeholder="Description">
+			</div>
+			<div class="form-group">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="repo.private" {% if not repo.public %}checked="checked" {% end %}>Make Repo Private!
+					</label>
+				</div>
+			</div>
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-success">Save & Apply</button>
+			</div>
+		</form>
+		<hr>
+		<div class="text-center">
+			<a href="/{{repo.owner.username}}/{{repo.reponame}}/delete" onclick="return confirm('Are you sure to delete this repo?')">
+				<button type="button" class="btn btn-danger">Delete This Repo.</button></a>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$("#form").validate({
+	rules: {
+		"repo.reponame": {
+			required: true,
+			maxlength: 32,
+			remote: {
+				url: "/!check/editrepo",
+				data: {
+					rid: "{{repo.rid}}",
+					username: "{{logined.username}}",
+					reponame: function() {
+						return $("#repo\\.reponame").val();
+					}
+				}
+			}
+		}
+	},
+	messages: {
+		"repo.reponame": {
+			required: "Please enter the reponame",
+			maxlength: "Reponame should be less than 32",
+			remote: "Reponame is already taken",
+		},
+	}
+});
+</script>
+
+{% end %}
