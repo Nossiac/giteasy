@@ -29,7 +29,7 @@
 				{% else %}
 				{% set last = repo.git.get(repo.git.head.target) %}
 
-				{{len(list(repo.git.branches.remote))}} branches
+				{{len(list(repo.git.branches.local))}} branches
 
 				<div class="pull-right">
 				Last commit: <a href="/{{user.username}}/{{repo.reponame}}/commit/{{str(repo.git.head.target)}}">{{str(repo.git.head.target)[:8]}}</a>

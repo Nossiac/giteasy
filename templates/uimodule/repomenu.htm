@@ -20,7 +20,7 @@
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu">
-			{% for branch in repo.git.branches.remote %}
+			{% for branch in repo.git.branches.local %}
 			<li><a href="/{{repo.owner.username}}/{{repo.reponame}}/tree/{{branch.split('/')[-1]}}"><span class="text-muted">Branch</span> : <b>{{branch.split('/')[-1]}}</b></a></li>
 			{% end %}
 		</ul>
