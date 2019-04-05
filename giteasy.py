@@ -6,20 +6,6 @@ import time
 import datetime
 import re
 import sys
-import random
-import struct
-import shlex
-import select
-import subprocess
-import sqlite3
-import hashlib
-import shutil
-import uuid
-import concurrent
-
-import requests
-import markdown
-import pygit2
 
 import tornado.httpserver
 import tornado.web
@@ -27,12 +13,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.escape
 
-# for safer markdown
-import bleach
-from bleach_whitelist import markdown_tags, markdown_attrs
-
-# import database.database
-from modules.Database import User, Repo, RepoHook, RepoCollaborator
+from modules.UIModules import *
 from modules.Base import *
 from modules.User import *
 from modules.Repo import *
@@ -43,40 +24,6 @@ tornado.options.define("port", default=8088, help="http port", type=int)
 tornado.options.define("repo", default="repo", help="repo root path", type=str)
 tornado.options.define("perf", default=True, help="High performance instead of full feature", type=bool)
 tornado.options.define("daemon", default=0, help="run as a daemon", type=int)
-
-
-
-def owner(func):
-	def _decorator(username, reponame):
-		def _wrapper(self, *args, **kwargs):
-			user = self.current_user
-			if not user:
-				return self.redirect("/!login?next="+self.request.uri)
-			else:
-				if user.admin():
-					return func(self, *args, **kwargs)
-				else:
-					return self.info("未授权!")
-
-		user = User.get_or_none(User.username == username)
-		repo = Repo.get_or_none(Repo.reponame == reponame)
-
-		if not user or not repo or repo.owner.uid != user.uid:
-			return self.info("未授权!") 
-		return _wrapper
-	return _decorator
-
-class Paginator(tornado.web.UIModule):
-	def render(self, paginator):
-		return self.render_string(
-			"uimodule/paginator.htm", paginator = paginator)
-
-
-class RepoMenu(tornado.web.UIModule):
-	def render(self, repo, logined = None):
-		return self.render_string(
-			"uimodule/repomenu.htm", repo = repo, logined = logined)
-
 
 
 if __name__ == "__main__":
