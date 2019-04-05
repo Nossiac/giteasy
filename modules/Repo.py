@@ -1,6 +1,7 @@
 import os
 import uuid
 import concurrent
+import shutil
 
 import pygit2
 import tornado.web
